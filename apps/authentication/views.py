@@ -24,29 +24,3 @@ class RegisterView(APIView):
               status=status.HTTP_201_CREATED
           )
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginView(APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
-
-        user=User.objects.filter(email=email).first()
-        if user is None:
-            raise AuthenticationFailed('User not found')
-
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password')
-
-        payload ={
-            'id': user.id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30),
-            'iat': datetime.datetime.now(datetime.timezone.utc)
-        }
-
-        token=jwt.encode(payload, settings.JWT_SECRET_KEY,algorithm='HS256')
-
-        return Response( {
-            'jwt':token
-        })
