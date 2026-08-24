@@ -1,10 +1,12 @@
 from rest_framework import status, permissions
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
 from apps.accounts.models import User
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
+from django.conf import settings
+import datetime
+import jwt
 
 
 class RegisterView(APIView):
@@ -24,6 +26,8 @@ class RegisterView(APIView):
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -35,11 +39,14 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password')
 
-        return Response(
-            {
-                "message": "WELCOME",
-                "id": user.id,
-                "email": user.email,
-            },
-            status=status.HTTP_200_OK
-        )
+        payload ={
+            'id': user.id,
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30),
+            'iat': datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        token=jwt.encode(payload, settings.JWT_SECRET_KEY,algorithm='HS256')
+
+        return Response( {
+            'jwt':token
+        })
