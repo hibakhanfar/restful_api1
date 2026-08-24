@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.accounts',
     'apps.authentication',
+    'apps.announcements',
+
 ]
 AUTH_USER_MODEL = 'accounts.User'
 MIDDLEWARE = [

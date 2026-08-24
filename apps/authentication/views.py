@@ -3,10 +3,6 @@ from rest_framework.response import Response
 from .serializers import RegisterSerializer
 from apps.accounts.models import User
 from rest_framework.views import APIView
-from rest_framework.exceptions import AuthenticationFailed
-from django.conf import settings
-import datetime
-import jwt
 
 
 class RegisterView(APIView):
