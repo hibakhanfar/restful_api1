@@ -1,7 +1,6 @@
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
-from apps.accounts.models import User
 from rest_framework.views import APIView
 
 

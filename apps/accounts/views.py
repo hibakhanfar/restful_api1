@@ -3,8 +3,6 @@ from rest_framework.response import Response
 from .serializers import ProfileSerializer
 from apps.accounts.models import Profile
 from rest_framework.views import APIView
-from rest_framework.exceptions import AuthenticationFailed
-from django.conf import settings
 
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
